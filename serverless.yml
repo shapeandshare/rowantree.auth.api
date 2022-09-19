@@ -43,7 +43,7 @@ functions:
 
   TokenLambdaFunction:
     handler: token_handler.handler
-    name: ${service}-${self:custom.stage}-TokenLambdaFunction
+    name: ${self:service}-${self:custom.stage}-TokenLambdaFunction
     url:
       cors: true
     events:
@@ -61,7 +61,7 @@ functions:
 
   RegisterLambdaFunction:
     handler: register_handler.handler
-    name: ${service}-${self:custom.stage}-RegisterLambdaFunction
+    name: ${self:service}-${self:custom.stage}-RegisterLambdaFunction
     url:
       cors: true
     events:
