@@ -18,6 +18,13 @@ custom:
   subnetIdThree: 'subnet-00d10f987726a8a3e'
   subnetIdFour: 'subnet-0799b88d1af596ab5'
 
+package:
+  individually: true
+  exclude:
+    - "**/*"
+  include:
+    - "src/**/*.*"
+
 plugins:
   - serverless-python-requirements
 
