@@ -28,7 +28,7 @@ def handler(event, context):
     logging.error(event)
     logging.error(context)
     multipart_data = decoder.MultipartDecoder.from_response(
-        FormResponse(content=event["body"], headers=event["headers"])
+        FormResponse(content=event["body"], headers={"content-type": event["headers"]["Content-Type"]})
     )
     # from requests_toolbelt import MultipartDecoder
     #
