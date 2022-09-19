@@ -40,7 +40,7 @@ provider:
     ACCESS_TOKEN_EXPIRATION_TIME: ${self:custom.accessTokenExpirationTime}
     ACCESS_TOKEN_ISSUER: ${self:custom.accessTokenIssuer}
     ACCESS_AUTH_ENDPOINT: ${self:custom.accessAuthEndpoint}
-    DATABASE_SERVER: ${self:custom.accessTokenIssuer}
+    DATABASE_SERVER: ${self:custom.databaseServer}
     DATABASE_NAME: ${self:custom.databaseName}
     DATABASE_USERNAME: ${self:custom.databaseUsername}
     DATABASE_PASSWORD: ${self:custom.databasePassword}
