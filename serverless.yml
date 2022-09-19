@@ -49,7 +49,7 @@ functions:
   #  https://www.serverless.com/framework/docs/providers/aws/guide/functions
 
   TokenLambdaFunction:
-    handler: token_handler.handler
+    handler: src.handlers.token_handler.handler
     name: ${self:service}-${self:custom.stage}-TokenLambdaFunction
     url:
       cors: true
@@ -67,7 +67,7 @@ functions:
         - ${self:custom.subnetIdFour}
 
   RegisterLambdaFunction:
-    handler: register_handler.handler
+    handler: src.handlers.register_handler.handler
     name: ${self:service}-${self:custom.stage}-RegisterLambdaFunction
     url:
       cors: true
