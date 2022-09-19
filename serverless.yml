@@ -1,20 +1,78 @@
 service: rowantree-auth-api
 frameworkVersion: '3'
 
+custom:
+  accessTokenSecretKey: ${env:ACCESS_TOKEN_SECRET_KEY}
+  accessTokenAlgorithm: 'HS256'
+  accessTokenExpirationTime: 60
+  accessTokenIssuer: 'http://localhost:8001'
+  accessAuthEndpoint: 'http://localhost:8001'
+  databaseServer: ${env:DATABASE_SERVER}
+  databaseUsername: ${env:DATABASE_USERNAME}
+  databasePassword: ${env:DATABASE_PASSWORD}
+  databaseName: 'trt.auth.db'
+  stage: ${env:STAGE}
+  securityGroupId: 'sg-0b808f5df0a126a8d'
+  subnetIdOne: 'subnet-046cd412566ccddf6'
+  subnetIdTwo: 'subnet-0c94756c92664d8f5'
+  subnetIdThree: 'subnet-00d10f987726a8a3e'
+  subnetIdFour: 'subnet-0799b88d1af596ab5'
+
+plugins:
+  - serverless-python-requirements
+
 provider:
   name: aws
+  stage: ${self:custom.stage}
+  region: us-west-2
   runtime: python3.9
+  memorySize: 512
+  environment:
+    ACCESS_TOKEN_SECRET_KEY: ${self:custom.accessTokenSecretKey}
+    ACCESS_TOKEN_ALGORITHM: ${self:custom.accessTokenAlgorithm}
+    ACCESS_TOKEN_EXPIRATION_TIME: ${self:custom.accessTokenExpirationTime}
+    ACCESS_TOKEN_ISSUER: ${self:custom.accessTokenIssuer}
+    ACCESS_AUTH_ENDPOINT: ${self:custom.accessAuthEndpoint}
+    DATABASE_SERVER: ${self:custom.accessTokenIssuer}
+    DATABASE_NAME: ${self:custom.databaseName}
+    DATABASE_USERNAME: ${self:custom.databaseUsername}
+    DATABASE_PASSWORD: ${self:custom.databasePassword}
 
 functions:
-  token:
+  #  https://www.serverless.com/framework/docs/providers/aws/guide/functions
+
+  TokenLambdaFunction:
     handler: token_handler.handler
+    name: ${service}-${self:custom.stage}-TokenLambdaFunction
+    url:
+      cors: true
     events:
       - httpApi:
           path: /v1/auth/token
           method: post
-  register:
+    vpc:
+      securityGroupIds:
+        - ${self:custom.securityGroupId}
+      subnetIds:
+        - ${self:custom.subnetIdOne}
+        - ${self:custom.subnetIdTwo}
+        - ${self:custom.subnetIdThree}
+        - ${self:custom.subnetIdFour}
+
+  RegisterLambdaFunction:
     handler: register_handler.handler
+    name: ${service}-${self:custom.stage}-RegisterLambdaFunction
+    url:
+      cors: true
     events:
       - httpApi:
           path: /v1/auth/register
           method: post
+    vpc:
+      securityGroupIds:
+        - ${self:custom.securityGroupId}
+      subnetIds:
+        - ${self:custom.subnetIdOne}
+        - ${self:custom.subnetIdTwo}
+        - ${self:custom.subnetIdThree}
+        - ${self:custom.subnetIdFour}
