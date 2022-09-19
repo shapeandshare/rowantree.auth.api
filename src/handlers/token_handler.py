@@ -18,8 +18,8 @@ register_controller: RegisterController = RegisterController(auth_service=auth_s
 
 
 def handler(event, context):
-    logging.debug(event)
-    logging.debug(context)
+    logging.error(event)
+    logging.error(context)
     try:
         return register_controller.execute(request=event).json(by_alias=True)
     except HTTPException as error:
