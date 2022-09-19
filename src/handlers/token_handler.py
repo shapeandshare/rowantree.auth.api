@@ -9,6 +9,7 @@ from rowantree.auth.service.controllers.register import RegisterController
 from rowantree.auth.service.services.auth import AuthService
 from rowantree.auth.service.services.db.dao import DBDAO
 from rowantree.auth.service.services.db.utils import WrappedConnectionPool
+from rowantree.contracts import BaseModel
 
 # Creating database connection pool, and DAO
 wrapped_cnxpool: WrappedConnectionPool = WrappedConnectionPool()
@@ -18,10 +19,17 @@ auth_service: AuthService = AuthService(dao=dao)
 register_controller: RegisterController = RegisterController(auth_service=auth_service)
 
 
+class FormResponse(BaseModel):
+    content: str
+    headers: dict[str, str]
+
+
 def handler(event, context):
     logging.error(event)
     logging.error(context)
-    multipart_data = decoder.MultipartDecoder.from_response(event["body"], event["headers"]["content-type"])
+    multipart_data = decoder.MultipartDecoder.from_response(
+        FormResponse(content=event["body"], headers=event["headers"])
+    )
     # from requests_toolbelt import MultipartDecoder
     #
     # decoder = MultipartDecoder(content, content_type)
