@@ -21,4 +21,3 @@ class ApiGatewayEvent(BaseModel):
     http_method: str
     headers: ApiGatewayEventHeaders
     request_context: ApiGatewayEventRequestContext
-

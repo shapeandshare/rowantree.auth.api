@@ -1,6 +1,7 @@
 import json
 import logging
 
+from requests_toolbelt.multipart import decoder
 from starlette import status
 from starlette.exceptions import HTTPException
 
@@ -20,6 +21,12 @@ register_controller: RegisterController = RegisterController(auth_service=auth_s
 def handler(event, context):
     logging.error(event)
     logging.error(context)
+    multipart_data = decoder.MultipartDecoder.from_response(event["body"])
+
+    for part in multipart_data.parts:
+        logging.error(part.content)  # Alternatively, part.text if you want unicode
+        logging.error(part.headers)
+
     try:
         return register_controller.execute(request=event).json(by_alias=True)
     except HTTPException as error:
