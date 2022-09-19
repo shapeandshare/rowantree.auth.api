@@ -21,9 +21,7 @@ token_controller: TokenController = TokenController(auth_service=auth_service)
 def handler(event, context):
     logging.error(event)
     logging.error(context)
-    multipart_data = decoder.MultipartDecoder.from_response(
-        response={"content": event["body"], "headers": event["headers"]}
-    )
+    multipart_data = decoder.MultipartDecoder.from_response(event["body"], event["headers"]["content-type"])
     # from requests_toolbelt import MultipartDecoder
     #
     # decoder = MultipartDecoder(content, content_type)

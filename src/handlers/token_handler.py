@@ -21,9 +21,7 @@ register_controller: RegisterController = RegisterController(auth_service=auth_s
 def handler(event, context):
     logging.error(event)
     logging.error(context)
-    multipart_data = decoder.MultipartDecoder.from_response(
-        response={"content": event["body"], "headers": event["headers"]}
-    )
+    multipart_data = decoder.MultipartDecoder.from_response(event["body"], event["headers"]["content-type"])
     # from requests_toolbelt import MultipartDecoder
     #
     # decoder = MultipartDecoder(content, content_type)
