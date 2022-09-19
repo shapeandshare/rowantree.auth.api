@@ -21,7 +21,14 @@ register_controller: RegisterController = RegisterController(auth_service=auth_s
 def handler(event, context):
     logging.error(event)
     logging.error(context)
-    multipart_data = decoder.MultipartDecoder.from_response(event["body"])
+    multipart_data = decoder.MultipartDecoder.from_response(
+        response={"content": event["body"], "headers": event["headers"]}
+    )
+    # from requests_toolbelt import MultipartDecoder
+    #
+    # decoder = MultipartDecoder(content, content_type)
+    # for part in decoder.parts:
+    #     print(part.headers['content-type'])
 
     for part in multipart_data.parts:
         logging.error(part.content)  # Alternatively, part.text if you want unicode
