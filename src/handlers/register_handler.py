@@ -18,6 +18,8 @@ token_controller: TokenController = TokenController(auth_service=auth_service)
 
 
 def handler(event, context):
+    logging.debug(event)
+    logging.debug(context)
     try:
         return token_controller.execute(request=event).json(by_alias=True)
     except HTTPException as error:
