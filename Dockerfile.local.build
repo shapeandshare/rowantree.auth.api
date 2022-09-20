@@ -1,0 +1,17 @@
+FROM therowantree/aws.lambda.python.build.image:latest
+
+# Packaging step
+
+RUN python3.9 -m venv venv
+RUN source ./venv/bin/activate && pip install --upgrade pip
+
+COPY env /tmp/workbench/env/
+COPY src /tmp/workbench/src/
+COPY package.json /tmp/workbench/
+COPY package-lock.json /tmp/workbench/
+COPY serverless.yml /tmp/workbench/
+COPY requirements.txt /tmp/workbench/
+
+RUN . ~/.nvm/nvm.sh && npm install
+RUN source ./venv/bin/activate && pip install -r ./requirements.txt
+RUN . ~/.nvm/nvm.sh && source ./venv/bin/activate && npx serverless package
