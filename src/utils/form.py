@@ -1,16 +1,19 @@
-
 from requests_toolbelt.multipart import decoder
 from starlette import status
 from starlette.exceptions import HTTPException
 
+from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.form_response import FormResponse
+from src.contracts.dtos.header_type import HeaderType
 
 
-def parse_form_data(event: dict) -> dict[str, str]:
+def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
     try:
         encoding: str = "utf-8"
         multipart_data = decoder.MultipartDecoder.from_response(
-            FormResponse(content=bytes(event["body"], encoding), headers={"content-type": event["headers"]["Content-Type"]})
+            FormResponse(
+                content=bytes(event.body, encoding), headers={"content-type": event.headers[HeaderType.CONTENT_TYPE]}
+            )
         )
 
         form_values: dict[str, str] = {}
@@ -23,4 +26,4 @@ def parse_form_data(event: dict) -> dict[str, str]:
 
         return form_values
     except Exception as error:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Unable to parse form data') from error
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to parse form data") from error
