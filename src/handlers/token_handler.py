@@ -12,6 +12,7 @@ from rowantree.auth.service.controllers.token import TokenController
 from rowantree.auth.service.services.auth import AuthService
 from rowantree.auth.service.services.db.dao import DBDAO
 from rowantree.auth.service.services.db.utils import WrappedConnectionPool
+from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.lambda_response import LambdaResponse
 from src.utils.form import parse_form_data
 
@@ -28,7 +29,8 @@ def handler(event, context):
     logging.info(context)
 
     try:
-        auth_request: AuthenticateUserRequest = AuthenticateUserRequest.parse_obj(parse_form_data(event=event))
+        api_gw_event = ApiGatewayEvent.parse_obj(event)
+        auth_request: AuthenticateUserRequest = AuthenticateUserRequest.parse_obj(parse_form_data(event=api_gw_event))
         request: OAuth2PasswordRequestForm = OAuth2PasswordRequestForm(
             username=auth_request.username, password=auth_request.password, scope="", grant_type="password"
         )
@@ -37,20 +39,23 @@ def handler(event, context):
     except HTTPException as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": error.status_code,
-            "traceback": traceback.print_exc(),
+            "traceback": traceback.format_exc(),
             "error": str(error),
+            "detail": str(error.detail),
         }
         message: str = json.dumps(message_dict)
-        logging.error(message)
-        return LambdaResponse(status_code=error.status_code, body="Internal Server Error").dict(by_alias=True)
+        logging.debug(message)
+        return LambdaResponse(status_code=error.status_code, body=json.dumps({"detail": error.detail})).dict(
+            by_alias=True
+        )
     except Exception as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "traceback": traceback.print_exc(),
+            "traceback": traceback.format_exc(),
             "error": str(error),
         }
         message: str = json.dumps(message_dict)
-        logging.error(message)
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body="Internal Server Error").dict(
-            by_alias=True
-        )
+        logging.debug(message)
+        return LambdaResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps({"detail": "Internal Server Error"})
+        ).dict(by_alias=True)
