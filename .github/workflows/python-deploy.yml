@@ -31,9 +31,9 @@ jobs:
         source ./venv/bin/activate
         pip install --upgrade pip
         pip install sacr
-        . ~/.nvm/nvm.sh && npx npm ci
+        . /root/.nvm/nvm.sh && npx npm ci
         sacr run prebuild
     - name: Deploy
       run: |
         python3.9 -m venv venv
-        . ~/.nvm/nvm.sh && npx serverless deploy
+        . /root/.nvm/nvm.sh && npx serverless deploy
