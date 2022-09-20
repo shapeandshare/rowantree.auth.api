@@ -12,6 +12,7 @@ custom:
   databasePassword: ${env:DATABASE_PASSWORD}
   databaseName: ${env:DATABASE_NAME}
   stage: ${env:STAGE}
+  region: ${env:AWS_DEFAULT_REGION}
 
   # TODO: Move to cloudformation exports
   securityGroupId: 'sg-0b808f5df0a126a8d'
@@ -37,9 +38,9 @@ plugins:
 provider:
   name: aws
   stage: ${self:custom.stage}
-  region: us-west-2
+  region: ${self:custom.region}
   runtime: python3.9
-  memorySize: 512
+  memorySize: 256
   environment:
     ACCESS_TOKEN_SECRET_KEY: ${self:custom.accessTokenSecretKey}
     ACCESS_TOKEN_ALGORITHM: ${self:custom.accessTokenAlgorithm}
