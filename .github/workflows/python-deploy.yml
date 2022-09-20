@@ -1,0 +1,41 @@
+# This workflow will upload a Python Package using Twine when a release is created
+# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy-sandbox:
+    runs-on: therowantree/aws.lambda.python.build.image:latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.SANDBOX_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SANDBOX_AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.SANDBOX_AWS_DEFAULT_REGION }}
+      ACCESS_TOKEN_SECRET_KEY: ${{ secrets.SANDBOX_ACCESS_TOKEN_SECRET_KEY }}
+      ACCESS_TOKEN_ALGORITHM: ${{ secrets.SANDBOX_ACCESS_TOKEN_ALGORITHM }}
+      ACCESS_TOKEN_EXPIRATION_TIME: ${{ secrets.SANDBOX_ACCESS_TOKEN_EXPIRATION_TIME }}
+      ACCESS_TOKEN_ISSUER: ${{ secrets.SANDBOX_ACCESS_TOKEN_ISSUER }}
+      ACCESS_AUTH_ENDPOINT: ${{ secrets.SANDBOX_ACCESS_AUTH_ENDPOINT }}
+      DATABASE_SERVER: ${{ secrets.SANDBOX_DATABASE_SERVER }}
+      DATABASE_NAME: ${{ secrets.SANDBOX_ACCESS_DATABASE_NAME }}
+      DATABASE_USERNAME: ${{ secrets.SANDBOX_ACCESS_DATABASE_USERNAME }}
+      DATABASE_PASSWORD: ${{ secrets.SANDBOX_ACCESS_DATABASE_PASSWORD }}
+      STAGE: sandbox
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        python3.9 -m pip install --upgrade pip
+        python3.9 -m pip install sacr
+        npm ci
+        sacr run prebuild
+    - name: Deploy
+      run: npx serverless deploy
