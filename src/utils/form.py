@@ -1,3 +1,5 @@
+import logging
+
 from requests_toolbelt.multipart import decoder
 from starlette import status
 from starlette.exceptions import HTTPException
@@ -26,4 +28,5 @@ def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
 
         return form_values
     except Exception as error:
+        logging.error(str(error))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to parse form data") from error

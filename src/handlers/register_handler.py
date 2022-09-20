@@ -37,10 +37,10 @@ def handler(event, context):
             "statusCode": error.status_code,
             "traceback": traceback.format_exc(),
             "error": str(error),
-            "detail": str(error.detail),
+            "detail": error.detail,
         }
         message: str = json.dumps(message_dict)
-        logging.debug(message)
+        logging.error(message)
         return LambdaResponse(status_code=error.status_code, body=json.dumps({"detail": error.detail})).dict(
             by_alias=True
         )
@@ -51,7 +51,7 @@ def handler(event, context):
             "error": str(error),
         }
         message: str = json.dumps(message_dict)
-        logging.debug(message)
+        logging.error(message)
         return LambdaResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps({"detail": "Internal Server Error"})
         ).dict(by_alias=True)
