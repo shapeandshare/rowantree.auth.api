@@ -3,15 +3,17 @@ frameworkVersion: '3'
 
 custom:
   accessTokenSecretKey: ${env:ACCESS_TOKEN_SECRET_KEY}
-  accessTokenAlgorithm: 'HS256'
-  accessTokenExpirationTime: 60
-  accessTokenIssuer: 'http://localhost:8001'
-  accessAuthEndpoint: 'http://localhost:8001'
+  accessTokenAlgorithm: ${env:ACCESS_TOKEN_ALGORITHM}
+  accessTokenExpirationTime: ${env:ACCESS_TOKEN_EXPIRATION_TIME}
+  accessTokenIssuer: ${env:ACCESS_TOKEN_ISSUER}
+  accessAuthEndpoint: ${env:ACCESS_AUTH_ENDPOINT}
   databaseServer: ${env:DATABASE_SERVER}
   databaseUsername: ${env:DATABASE_USERNAME}
   databasePassword: ${env:DATABASE_PASSWORD}
-  databaseName: 'trt.auth.db'
+  databaseName: ${env:DATABASE_NAME}
   stage: ${env:STAGE}
+
+  # TODO: Move to cloudformation exports
   securityGroupId: 'sg-0b808f5df0a126a8d'
   subnetIdOne: 'subnet-046cd412566ccddf6'
   subnetIdTwo: 'subnet-0c94756c92664d8f5'

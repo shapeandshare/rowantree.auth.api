@@ -22,6 +22,7 @@ jobs:
         DATABASE_NAME: ${{ secrets.SANDBOX_ACCESS_DATABASE_NAME }}
         DATABASE_USERNAME: ${{ secrets.SANDBOX_ACCESS_DATABASE_USERNAME }}
         DATABASE_PASSWORD: ${{ secrets.SANDBOX_ACCESS_DATABASE_PASSWORD }}
+        # TODO: Review deployment stages.
         STAGE: sandbox
     steps:
     - uses: actions/checkout@v2
