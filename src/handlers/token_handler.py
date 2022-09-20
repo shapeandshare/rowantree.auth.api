@@ -16,6 +16,8 @@ from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.lambda_response import LambdaResponse
 from src.utils.form import parse_form_data
 
+logging.basicConfig(level=logging.INFO)
+
 # Creating database connection pool, and DAO
 wrapped_cnxpool: WrappedConnectionPool = WrappedConnectionPool()
 dao: DBDAO = DBDAO(cnxpool=wrapped_cnxpool.cnxpool)
