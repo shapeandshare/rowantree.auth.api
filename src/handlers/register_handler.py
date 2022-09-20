@@ -23,8 +23,8 @@ register_handler: RegisterController = RegisterController(auth_service=auth_serv
 
 
 def handler(event, context):
-    logging.error(event)
-    logging.error(context)
+    logging.info(event)
+    logging.info(context)
 
     try:
         request: RegisterUserRequest = RegisterUserRequest.parse_obj(parse_form_data(event=event))
@@ -33,20 +33,21 @@ def handler(event, context):
     except HTTPException as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": error.status_code,
-            "traceback": traceback.print_exc(),
+            "traceback": traceback.format_exc(),
             "error": str(error),
+            "detail": str(error.detail),
         }
         message: str = json.dumps(message_dict)
-        logging.error(message)
-        # raise error from error
-        return LambdaResponse(status_code=error.status_code, body=message).dict(by_alias=True)
+        logging.debug(message)
+        return LambdaResponse(status_code=error.status_code, body=error.detail).dict(by_alias=True)
     except Exception as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "traceback": traceback.print_exc(),
+            "traceback": traceback.format_exc(),
             "error": str(error),
         }
         message: str = json.dumps(message_dict)
-        logging.error(message)
-        # raise error from error
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=message).dict(by_alias=True)
+        logging.debug(message)
+        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body="Internal Server Error").dict(
+            by_alias=True
+        )

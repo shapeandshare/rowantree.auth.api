@@ -36,9 +36,11 @@ jobs:
         . /root/.nvm/nvm.sh && npx npm ci
     - name: Run Auditing
       run: |
+        source ./venv/bin/activate
         sacr run audit
     - name: Run Linting
       run: |
+        source ./venv/bin/activate
         sacr run lint
 # TODO: Enable with tests
 #    - name: Run Tests

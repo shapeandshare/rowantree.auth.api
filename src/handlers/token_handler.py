@@ -24,19 +24,16 @@ token_controller: TokenController = TokenController(auth_service=auth_service)
 
 
 def handler(event, context):
-    logging.error(event)
+    logging.info(event)
+    logging.info(context)
 
     try:
         auth_request: AuthenticateUserRequest = AuthenticateUserRequest.parse_obj(parse_form_data(event=event))
-        logging.error(auth_request)
         request: OAuth2PasswordRequestForm = OAuth2PasswordRequestForm(
             username=auth_request.username, password=auth_request.password, scope="", grant_type="password"
         )
-        logging.error(request)
         response: Token = token_controller.execute(request=request)
-        logging.error(response)
         return LambdaResponse(status_code=status.HTTP_200_OK, body=response.json(by_alias=True)).dict(by_alias=True)
-
     except HTTPException as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": error.status_code,
@@ -45,8 +42,7 @@ def handler(event, context):
         }
         message: str = json.dumps(message_dict)
         logging.error(message)
-        # raise error from error
-        return LambdaResponse(status_code=error.status_code, body=message).dict(by_alias=True)
+        return LambdaResponse(status_code=error.status_code, body="Internal Server Error").dict(by_alias=True)
     except Exception as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -55,5 +51,6 @@ def handler(event, context):
         }
         message: str = json.dumps(message_dict)
         logging.error(message)
-        # raise error from error
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=message).dict(by_alias=True)
+        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body="Internal Server Error").dict(
+            by_alias=True
+        )
