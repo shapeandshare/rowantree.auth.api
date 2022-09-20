@@ -10,7 +10,6 @@ from rowantree.auth.service.controllers.token import TokenController
 from rowantree.auth.service.services.auth import AuthService
 from rowantree.auth.service.services.db.dao import DBDAO
 from rowantree.auth.service.services.db.utils import WrappedConnectionPool
-
 from src.contracts.dtos.lambda_response import LambdaResponse
 from src.utils.form import parse_form_data
 
@@ -37,9 +36,7 @@ def handler(event, context):
     except HTTPException as error:
         logging.error(str(error))
         # raise error from error
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps(error)).dict(
-            by_alias=True
-        )
+        return LambdaResponse(status_code=error.status_code, body=json.dumps(error)).dict(by_alias=True)
     except Exception as error:
         # Caught all other uncaught errors.
         logging.error(str(error))

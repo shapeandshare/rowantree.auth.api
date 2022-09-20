@@ -31,9 +31,7 @@ def handler(event, context):
 
     except HTTPException as error:
         logging.error(str(error))
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps(error)).dict(
-            by_alias=True
-        )
+        return LambdaResponse(status_code=error.status_code, body=json.dumps(error)).dict(by_alias=True)
     except Exception as error:
         # Caught all other uncaught errors.
         logging.error(str(error))
