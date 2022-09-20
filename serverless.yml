@@ -14,6 +14,7 @@ custom:
   stage: ${env:STAGE}
   region: ${env:AWS_DEFAULT_REGION}
 
+  # This is for sandbox
   # TODO: Move to cloudformation exports
   securityGroupId: 'sg-0b808f5df0a126a8d'
   subnetIdOne: 'subnet-046cd412566ccddf6'
@@ -62,7 +63,10 @@ functions:
       cors: true
     events:
       - http:
-          path: /v1/auth/token
+# Deployment as a stand-alone endpoint, e.g. https://sandbox.rowantree.local/{/v1/auth/token}
+#          path: /v1/auth/token
+# Deployment within an environment level unified endpoint, e.g. https://sandbox.rowantree.local/auth/{v1/token}
+          path: /v1/token
           method: post
     vpc:
       securityGroupIds:
@@ -80,7 +84,10 @@ functions:
       cors: true
     events:
       - http:
-          path: /v1/auth/register
+# Deployment as a stand-alone endpoint, e.g. https://sandbox.rowantree.local/{/v1/auth/register}
+#          path: /v1/auth/register
+# Deployment within an environment level unified endpoint, e.g. https://sandbox.rowantree.local/auth/{/v1/register}
+          path: /v1/register
           method: post
     vpc:
       securityGroupIds:
