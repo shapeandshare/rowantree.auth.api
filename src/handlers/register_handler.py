@@ -1,5 +1,7 @@
 import json
 import logging
+import traceback
+from typing import Union
 
 from starlette import status
 from starlette.exceptions import HTTPException
@@ -28,13 +30,23 @@ def handler(event, context):
         request: RegisterUserRequest = RegisterUserRequest.parse_obj(parse_form_data(event=event))
         response: UserBase = register_handler.execute(request=request)
         return LambdaResponse(status_code=status.HTTP_200_OK, body=response.json(by_alias=True)).dict(by_alias=True)
-
     except HTTPException as error:
-        logging.error(str(error))
-        return LambdaResponse(status_code=error.status_code, body=json.dumps(error)).dict(by_alias=True)
+        message_dict: dict[str, Union[dict, str]] = {
+            "statusCode": error.status_code,
+            "traceback": traceback.print_exc(),
+            "error": str(error),
+        }
+        message: str = json.dumps(message_dict)
+        logging.error(message)
+        # raise error from error
+        return LambdaResponse(status_code=error.status_code, body=message).dict(by_alias=True)
     except Exception as error:
-        # Caught all other uncaught errors.
-        logging.error(str(error))
-        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps(error)).dict(
-            by_alias=True
-        )
+        message_dict: dict[str, Union[dict, str]] = {
+            "statusCode": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "traceback": traceback.print_exc(),
+            "error": str(error),
+        }
+        message: str = json.dumps(message_dict)
+        logging.error(message)
+        # raise error from error
+        return LambdaResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=message).dict(by_alias=True)
