@@ -24,6 +24,7 @@ auth_service: AuthService = AuthService(dao=dao)
 
 register_handler: RegisterController = RegisterController(auth_service=auth_service)
 
+
 def handler(event, context):
     logging.info(event)
     logging.info(context)
