@@ -13,3 +13,4 @@ export DATABASE_PASSWORD=<<>>
 export STAGE=<<>>
 export DOCKER_PUBLISH_API_KEY=<<>>
 export DOCKER_PUBLISHER_USER=<<>>
+export ROWANTREE_TLD=<<>>

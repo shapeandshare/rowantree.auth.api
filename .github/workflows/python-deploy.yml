@@ -10,6 +10,7 @@ jobs:
     container:
       image: therowantree/aws.lambda.python.build.image:latest
       env:
+        ROWANTREE_TLD: ${{ secrets.SANDBOX_ROWANTREE_TLD }}
         AWS_ACCESS_KEY_ID: ${{ secrets.SANDBOX_AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.SANDBOX_AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: ${{ secrets.SANDBOX_AWS_DEFAULT_REGION }}
