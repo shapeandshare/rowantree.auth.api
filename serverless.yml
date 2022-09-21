@@ -2,11 +2,12 @@ service: rowantree-auth-api
 frameworkVersion: '3'
 
 custom:
+  tld: ${env:ROWANTREE_TLD}                                     # e.g. sandbox.rowantree.shapeandshare.net
   accessTokenSecretKey: ${env:ACCESS_TOKEN_SECRET_KEY}
   accessTokenAlgorithm: ${env:ACCESS_TOKEN_ALGORITHM}
   accessTokenExpirationTime: ${env:ACCESS_TOKEN_EXPIRATION_TIME}
-  accessTokenIssuer: ${env:ACCESS_TOKEN_ISSUER}
-  accessAuthEndpoint: ${env:ACCESS_AUTH_ENDPOINT}
+  accessTokenIssuer: https://api.${env:ROWANTREE_TLD}/auth
+  accessAuthEndpoint: https://api.${env:ROWANTREE_TLD}
   databaseServer: ${env:DATABASE_SERVER}
   databaseUsername: ${env:DATABASE_USERNAME}
   databasePassword: ${env:DATABASE_PASSWORD}
@@ -43,6 +44,7 @@ provider:
   runtime: python3.9
   memorySize: 256
   environment:
+    ROWANTREE_TLD: ${self:custom.tld}
     ACCESS_TOKEN_SECRET_KEY: ${self:custom.accessTokenSecretKey}
     ACCESS_TOKEN_ALGORITHM: ${self:custom.accessTokenAlgorithm}
     ACCESS_TOKEN_EXPIRATION_TIME: ${self:custom.accessTokenExpirationTime}
