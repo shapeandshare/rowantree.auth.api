@@ -2,19 +2,17 @@ service: rowantree-auth-api
 frameworkVersion: '3'
 
 custom:
-  tld: ${env:ROWANTREE_TLD}                                     # e.g. sandbox.rowantree.shapeandshare.net
+  region: ${env:AWS_DEFAULT_REGION}
+  stage: ${env:STAGE}
+
+  tld: ${env:ROWANTREE_TLD} # e.g. sandbox.rowantree.shapeandshare.net
   accessTokenSecretKey: ${env:ACCESS_TOKEN_SECRET_KEY}
   accessTokenAlgorithm: ${env:ACCESS_TOKEN_ALGORITHM}
   accessTokenExpirationTime: ${env:ACCESS_TOKEN_EXPIRATION_TIME}
-  accessTokenIssuer: https://api.${env:ROWANTREE_TLD}/auth
-  accessAuthEndpoint: https://api.${env:ROWANTREE_TLD}
   databaseServer: ${env:DATABASE_SERVER}
   databaseUsername: ${env:DATABASE_USERNAME}
   databasePassword: ${env:DATABASE_PASSWORD}
   databaseName: ${env:DATABASE_NAME}
-  stage: ${env:STAGE}
-  region: ${env:AWS_DEFAULT_REGION}
-
   # This is for sandbox
   # TODO: Move to cloudformation exports
   securityGroupId: 'sg-0b808f5df0a126a8d'
@@ -48,8 +46,6 @@ provider:
     ACCESS_TOKEN_SECRET_KEY: ${self:custom.accessTokenSecretKey}
     ACCESS_TOKEN_ALGORITHM: ${self:custom.accessTokenAlgorithm}
     ACCESS_TOKEN_EXPIRATION_TIME: ${self:custom.accessTokenExpirationTime}
-    ACCESS_TOKEN_ISSUER: ${self:custom.accessTokenIssuer}
-    ACCESS_AUTH_ENDPOINT: ${self:custom.accessAuthEndpoint}
     DATABASE_SERVER: ${self:custom.databaseServer}
     DATABASE_NAME: ${self:custom.databaseName}
     DATABASE_USERNAME: ${self:custom.databaseUsername}
