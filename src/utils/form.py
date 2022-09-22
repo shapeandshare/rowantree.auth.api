@@ -6,7 +6,15 @@ from starlette.exceptions import HTTPException
 
 from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.form_response import FormResponse
-from src.contracts.dtos.header_type import HeaderType
+
+
+def demand_content_type(headers: dict[str, str]) -> str:
+    for key, value in headers:
+        if key.lower() == "content-type":
+            return headers[key]
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to find content type in request headers"
+    )
 
 
 def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
@@ -14,7 +22,7 @@ def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
         encoding: str = "utf-8"
         multipart_data = decoder.MultipartDecoder.from_response(
             FormResponse(
-                content=bytes(event.body, encoding), headers={"content-type": event.headers[HeaderType.CONTENT_TYPE]}
+                content=bytes(event.body, encoding), headers={"content-type": demand_content_type(event.headers)}
             )
         )
 
