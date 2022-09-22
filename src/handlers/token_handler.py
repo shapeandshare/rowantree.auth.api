@@ -15,6 +15,7 @@ from rowantree.auth.service.services.db.utils import WrappedConnectionPool
 from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.lambda_response import LambdaResponse
 from src.utils.form import parse_form_data
+from src.utils.headers import default_response_headers
 
 # https://docs.aws.amazon.com/lambda/latest/dg/python-logging.html
 logging.getLogger().setLevel(logging.INFO)
@@ -38,11 +39,13 @@ def handler(event, context):
             username=auth_request.username, password=auth_request.password, scope="", grant_type="password"
         )
         response: Token = token_controller.execute(request=request)
-        return LambdaResponse(status_code=status.HTTP_200_OK, body=response.json(by_alias=True)).dict(by_alias=True)
+        return LambdaResponse(
+            status_code=status.HTTP_200_OK, body=response.json(by_alias=True), headers=default_response_headers()
+        ).dict(by_alias=True)
     except HTTPException as error:
-        return LambdaResponse(status_code=error.status_code, body=json.dumps({"detail": error.detail})).dict(
-            by_alias=True
-        )
+        return LambdaResponse(
+            status_code=error.status_code, body=json.dumps({"detail": error.detail}), headers=default_response_headers()
+        ).dict(by_alias=True)
     except Exception as error:
         message_dict: dict[str, Union[dict, str]] = {
             "statusCode": status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -52,5 +55,7 @@ def handler(event, context):
         message: str = json.dumps(message_dict)
         logging.error(message)
         return LambdaResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, body=json.dumps({"detail": "Internal Server Error"})
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            body=json.dumps({"detail": "Internal Server Error"}),
+            headers=default_response_headers(),
         ).dict(by_alias=True)
