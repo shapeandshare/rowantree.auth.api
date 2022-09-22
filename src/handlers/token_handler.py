@@ -16,7 +16,8 @@ from src.contracts.dtos.api_gateway_event import ApiGatewayEvent
 from src.contracts.dtos.lambda_response import LambdaResponse
 from src.utils.form import parse_form_data
 
-logging.basicConfig(level=logging.INFO)
+# https://docs.aws.amazon.com/lambda/latest/dg/python-logging.html
+logging.getLogger().setLevel(logging.INFO)
 
 # Creating database connection pool, and DAO
 wrapped_cnxpool: WrappedConnectionPool = WrappedConnectionPool()
