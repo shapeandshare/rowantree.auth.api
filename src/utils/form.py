@@ -1,3 +1,4 @@
+import base64
 import json
 import logging
 import traceback
@@ -23,10 +24,12 @@ def demand_content_type(headers: dict[str, str]) -> str:
 def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
     try:
         encoding: str = "utf-8"
+
+        # the payload will be base64 encoded.
+        decoded_body: bytes = base64.b64decode(event.body)
+
         multipart_data = decoder.MultipartDecoder.from_response(
-            FormResponse(
-                content=bytes(event.body, encoding), headers={"content-type": demand_content_type(event.headers)}
-            )
+            FormResponse(content=decoded_body, headers={"content-type": demand_content_type(event.headers)})
         )
 
         form_values: dict[str, str] = {}
