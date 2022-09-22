@@ -58,7 +58,8 @@ functions:
     handler: src.handlers.token_handler.handler
     name: ${self:service}-${self:custom.stage}-TokenLambdaFunction
     url:
-      cors: true
+      cors:
+        origin: '*'
     events:
       - http:
 # Deployment as a stand-alone endpoint, e.g. https://sandbox.rowantree.local/{/v1/auth/token}
@@ -79,7 +80,8 @@ functions:
     handler: src.handlers.register_handler.handler
     name: ${self:service}-${self:custom.stage}-RegisterLambdaFunction
     url:
-      cors: true
+      cors:
+        origin: '*'
     events:
       - http:
 # Deployment as a stand-alone endpoint, e.g. https://sandbox.rowantree.local/{/v1/auth/register}
