@@ -40,14 +40,6 @@ def handler(event, context):
         response: Token = token_controller.execute(request=request)
         return LambdaResponse(status_code=status.HTTP_200_OK, body=response.json(by_alias=True)).dict(by_alias=True)
     except HTTPException as error:
-        message_dict: dict[str, Union[dict, str]] = {
-            "statusCode": error.status_code,
-            "traceback": traceback.format_exc(),
-            "error": str(error),
-            "detail": error.detail,
-        }
-        message: str = json.dumps(message_dict)
-        logging.error(message)
         return LambdaResponse(status_code=error.status_code, body=json.dumps({"detail": error.detail})).dict(
             by_alias=True
         )

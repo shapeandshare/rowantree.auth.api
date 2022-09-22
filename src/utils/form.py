@@ -1,4 +1,7 @@
+import json
 import logging
+import traceback
+from typing import Union
 
 from requests_toolbelt.multipart import decoder
 from starlette import status
@@ -9,7 +12,7 @@ from src.contracts.dtos.form_response import FormResponse
 
 
 def demand_content_type(headers: dict[str, str]) -> str:
-    for key, value in headers:
+    for key in headers.keys():
         if key.lower() == "content-type":
             return headers[key]
     raise HTTPException(
@@ -35,6 +38,15 @@ def parse_form_data(event: ApiGatewayEvent) -> dict[str, str]:
             form_values[entry_name] = entry_value
 
         return form_values
+    except HTTPException as error:
+        raise error from error
     except Exception as error:
-        logging.error(str(error))
+        message_dict: dict[str, Union[dict, str]] = {
+            "statusCode": status.HTTP_400_BAD_REQUEST,
+            "traceback": traceback.format_exc(),
+            "error": str(error),
+            "detail": "Unable to parse form data",
+        }
+        message: str = json.dumps(message_dict)
+        logging.error(message)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unable to parse form data") from error
