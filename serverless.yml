@@ -57,6 +57,7 @@ functions:
   TokenLambdaFunction:
     handler: src.handlers.token_handler.handler
     name: ${self:service}-${self:custom.stage}-TokenLambdaFunction
+    reservedConcurrency: 1
     events:
       - httpApi:
           path: /v1/token
@@ -73,6 +74,7 @@ functions:
   RegisterLambdaFunction:
     handler: src.handlers.register_handler.handler
     name: ${self:service}-${self:custom.stage}-RegisterLambdaFunction
+    reservedConcurrency: 1
     events:
       - httpApi:
           path: /v1/register
